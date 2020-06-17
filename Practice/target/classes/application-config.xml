@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd">
+
+	<!--  <bean id="helloService" class="com.coderby.myapp.hello.service.HelloService" />-->
+	<!--  <bean id="helloController" class="com.coderby.myapp.hello.service.HelloController" scope="prototype">
+		<constructor-arg ref="helloService" />
+	</bean>
+	-->
+	<context:component-scan base-package="com.coderby.myapp" />
+	<context:component-scan base-package="study.spring.myapp" />
+	
+<!--  	<aop:config>
+		<aop:pointcut id="printTime" expression="execution(* com.coderby..HelloService.say*(..))"></aop:pointcut>
+		<aop:pointcut expression="execution(* study.spring.myapp..MyService.bye(..))" id="printTime2"/>
+		<aop:pointcut expression="execution(* study.spring.myapp..YouService.*(..)))" id="printTime3"/>
+		
+		<aop:aspect ref="timeTracer">
+			<aop:around method="trace" pointcut-ref="printTime3" />
+		</aop:aspect>
+		
+		<aop:aspect ref="myTime">
+			<aop:before method="nextTime" pointcut-ref="printTime2" />
+		</aop:aspect>
+		
+		<aop:aspect ref="myTime" >
+			<aop:before method="nextTime" pointcut-ref="printTime"/>
+		</aop:aspect>
+		<aop:aspect ref="timeTracer">
+			<aop:around method="trace" pointcut-ref="printTime"/>
+		</aop:aspect>
+	</aop:config> -->
+	<aop:aspectj-autoproxy/>
+	
+</beans>

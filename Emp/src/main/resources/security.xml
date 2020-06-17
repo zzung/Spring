@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:c="http://www.springframework.org/schema/c"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-4.2.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+<bean id="loginFailHandler" class="com.coderby.myapp.member.auth.LoginFailHandler"></bean>
+
+<!-- 권한이 큰것을 맨 아래에 놓기 -->
+<!-- resources/**하위폴더에 있는 것들은 막지않겠다 (jquery,images 등) -->
+<security:http pattern="/resources/**" security="none" />
+<security:http>
+	<security:intercept-url pattern="/hr/delete" access="hasRole('ROLE_ADMIN')" />
+	<security:intercept-url pattern="/hr/*" access="permitAll" />
+	
+	<security:intercept-url pattern="/file/delete/*" access="hasRole('ROLE_USER')"/>
+	<security:intercept-url pattern="/file/new" access="hasRole('ROLE_USER')"/>
+	
+	
+	<!-- login-page,logout-url 다 컨트롤러에서 처리 
+	/loginCheck로 일단 보내서 인터셉트가 처리 -->
+	<security:form-login login-page="/login"
+	username-parameter="id" password-parameter="pw"
+	login-processing-url="/loginCheck" 
+	default-target-url="/loginCheck"
+	authentication-failure-handler-ref="loginFailHandler" />
+	<security:logout logout-url="/logout" />
+	<security:access-denied-handler error-page="/error/autherror" />
+	<security:csrf disabled="true"/>
+	
+	<!-- 중복로그인 막는거  -->
+	<security:session-management>
+		<security:concurrency-control max-sessions="1" expired-url="/error/loginDuplicate"/>
+	</security:session-management>
+</security:http>
+
+<!-- provider는 여러개 생성가능 , manager태그에 우리가 만든 provider를 넣어서 인증하려는것 -->
+<bean id="memberAuthenticationProvider"
+class="com.coderby.myapp.member.auth.MemberAuthenticationProvider" />
+<security:authentication-manager>
+<security:authentication-provider ref="memberAuthenticationProvider" />
+</security:authentication-manager>
+
+
+
+</beans>

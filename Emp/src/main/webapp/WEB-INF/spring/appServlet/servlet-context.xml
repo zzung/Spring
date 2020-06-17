@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-4.2.xsd
+		http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+
+<!-- 웹에 관련된 애들 -->
+
+	<mvc:annotation-driven />
+	<!-- 
+	<mvc:annotation-driven >
+		<mvc:message-converters register-defaults="false">  
+			<beans:bean id="jacksonMessageConverter" 
+				class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+			<beans:property name="objectMapper">
+				<beans:bean class="com.coderby.myapp.util.MyObjectMapper" />
+			</beans:property>
+			</beans:bean>
+		</mvc:message-converters>
+	</mvc:annotation-driven>
+	 -->
+
+	<mvc:resources mapping="/resources/**" location="/resources/" />
+	<!-- resources밑에  -->
+
+	<!-- 파일속에있는 내부 리소스에 접근하지 못하도록 하기 위해서 (homeController 에서 home의 확장자 쓰지 x -->
+	<beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<beans:property name="prefix" value="/WEB-INF/views/" />
+		<beans:property name="suffix" value=".jsp" />
+	</beans:bean>
+	
+	<context:component-scan base-package="study.spring.emp" />
+	
+	<mvc:view-controller path="/" view-name="home" />
+	<mvc:view-controller path="/hr/main" view-name="/hr/main" />
+	<mvc:view-controller path="/error/autherror" view-name="/error/autherror" />
+	
+	<beans:bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<beans:property name="maxUploadSize">
+			<beans:value>50000000</beans:value>
+		</beans:property>
+	</beans:bean>
+	
+	<!-- controller에서 딱히 기능을 안하니까 바로 login으로 보내도록 처리 -->
+	<mvc:view-controller path="/login" view-name="login"/>
+	
+	<!-- 디스패처서블릿이랑 스프링이랑 연결시켜주려고(매핑) context로 등록해놔야함 -->
+	<context:component-scan base-package="study.spring.emp.controller" />
+	<context:component-scan base-package="study.spring.emp.file.controller" />
+	<context:component-scan base-package="com.coderby.myapp.member.controller" />
+	
+	<mvc:interceptors>
+		<mvc:interceptor>
+		<mvc:mapping path="/**"/>
+		<beans:bean class="com.coderby.myapp.member.auth.LoginInterceptor"/>		
+		</mvc:interceptor>
+	</mvc:interceptors>
+	
+	
+</beans:beans>
