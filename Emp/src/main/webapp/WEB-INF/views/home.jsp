@@ -11,15 +11,19 @@
 <h1>Welcome Page</h1>
 <sec:authorize access="isAnonymous()">
 	<a href="login"># 로그인</a><br>
+	<a href="member/insert"># 회원 가입</a><br>
 </sec:authorize>
-<sec:authentication property="principal.username"/> 님 환영합니다.<br>
-<br>
 <sec:authorize access="isAuthenticated()">
-<form action=logout method=post>
-<input type=submit value="로그아웃">
-</form>
+	<sec:authentication property="principal.username" var="username"/> ${username}님 환영합니다.
+	<form action=logout method=post>
+	<input type=submit value="로그아웃">
+	</form>
+	<br>
+	<a href="member/info?userId=<sec:authentication property="principal.username" />"># 마이페이지</a><br>
+	<sec:authorize access="hasAnyRole('ROLE_ADMIN','ROLE_MASTER')">
+		<a href="member/list"># 회원 목록 관리</a><br>
+	</sec:authorize>
 </sec:authorize>
-<a href="member/insert"># 회원 가입</a><br>
 <a href="file/"># 파일 업로드 페이지</a><br>
 <a href="hr/main"># 사원 정보 페이지</a><br>
 

@@ -5,39 +5,40 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Join page</title>
+<title>insert/update page</title>
 </head>
 <body>
-<h1>회원 가입 페이지</h1>
-<form action="../member/insert" method="post">
+<h1>${message eq 'update'? '정보 수정': '회원 가입' }</h1>
+<form action="../member/${message}" method="post">
 <table border="1">
 <tr>
-	<th>아이디</th>
-	<td><input type="text" name="userId"></td>
+	<th>Id</th>
+	<td><input type="text" name="userId" value="${member.userId}"></td>
 </tr>
 <tr>
-	<th>비밀번호</th>
-	<td><input type="password" name="password"></td>
+	<th>Name </th>
+	<td><input type="text" name="name" value="${member.name}"></td>
 </tr>
 <tr>
-	<th>이름 </th>
-	<td><input type="text" name="name"></td>
+	<th>Password </th>
+	<td><input type="password" name="password" value="${member.password}"></td>
 </tr>
 <tr>
-	<th>이메일</th>
-	<td><input type="text" name="email"></td>
+	<th>Email</th>
+	<td><input type="text" name="email" value="${member.email}"></td>
 </tr>
 <tr>
-	<th>주소 </th>
-	<td><input type="text" name="address"></td>
+	<th>Address</th>
+	<td><input type="text" name="address" value="${member.address}"></td>
 </tr>
 <tr>
 <th colspan=2>	
-<input type="submit" value="가입하기">
-<input type="reset" value="취소">
+<input type="submit" value="입 력">
+<input type="reset" value="취 소">
 </th>
 </tr>
 </table>
 </form>
+
 </body>
 </html>

@@ -25,15 +25,10 @@ public class LoginController {
 	@Autowired
 	IMemberService memberService;
 	
-	@GetMapping("/login")
-	public String login(Model model) {
-		return "login";
-	}
-	
 	@PostMapping("/logout")
 	public String logout(Model model, HttpSession session) {
 		session.invalidate();
-		return "redirect:/login";
+		return "redirect:/";
 	}
 	
 //	UsernamePasswordAuthenticationToken ;(security 자체에서)인증이 됐다고 판단/메시지 전달 가능
@@ -48,34 +43,22 @@ public class LoginController {
  * */	
 	@RequestMapping("/loginCheck")
 	public String loginCheck(Model model, HttpSession session) {
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-			if(!(authentication.getDetails() instanceof MemberVO)) {
 //			authentication = (AnonymousAuthenticationToken)authentication; --형변환해도 이미 인증된 객체라고 판단함
 //			if(authentication.equals(AnonymousAuthenticationToken.class)) {
 //				model.addAttribute("message","아이디가 없습니다. 다시 확인해주세요!");
 //			}else if(authentication.getCredentials()==null) {
 //				model.addAttribute("message","비밀번호가 잘못됐습니다. 다시 확인해주세요!");
 //			}
-			model.addAttribute("message","아이디 또는 비밀번호가 잘못됐습니다.");
-			return "login";
+//			model.addAttribute("message","아이디 또는 비밀번호가 잘못됐습니다.");
+//			return "login";
 			//내 세션에 해당하는 details에 있는 memberVO가 들어있음
 			//MemberVO객체가 들어가있으면 true, 없으면 false
-		}else {
-			MemberVO member = (MemberVO)authentication.getDetails();
-			session.setAttribute("userId", member.getUserId());
-			session.setAttribute("auth", member.getAuth());
 			session.setAttribute("startTime", LocalDateTime.now());
-			String url="/";	//세션에서 주소를 꺼내와서 로그인 성공이후 보내줌
-			if(session.getAttribute("url")!=null) {
-				url=(String)session.getAttribute("url");
-			}
+//			String url="/";	//세션에서 주소를 꺼내와서 로그인 성공이후 보내줌
+//			if(session.getAttribute("url")!=null) {
+//				url=(String)session.getAttribute("url");
+//			}
 			return "redirect:/";
 		}
-	}
-	
-	
-	
-	
-	
 	
 }

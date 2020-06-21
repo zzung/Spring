@@ -49,6 +49,7 @@ public class MemberAuthenticationProvider implements AuthenticationProvider {
 	
 	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+		System.out.println("로그인 시작");
 		if(authentication.getPrincipal()==null) {
 			return null;
 		}
@@ -69,8 +70,9 @@ public class MemberAuthenticationProvider implements AuthenticationProvider {
 		if(!member.isEnabled()) {
 			throw new DisabledException("정지당한 계정입니다 .관리자에게 문의하세요");
 		}
+		System.out.println("로그인 완료");
 		UsernamePasswordAuthenticationToken result =
-				new UsernamePasswordAuthenticationToken(member, password,member.getAuthorities());
+				new UsernamePasswordAuthenticationToken(member, password, member.getAuthorities());
 		//principal이 객체 자체를 뜻할떄도 있음
 		//토큰에 id,password,authorities만 들어가있을때는 다른 userDetails 정보가 필요할떄 가져오기 어려우니까 , 객체 자체를 넘겨주는것이 편함.
 		return result;

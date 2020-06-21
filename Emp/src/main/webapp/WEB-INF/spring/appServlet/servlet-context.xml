@@ -40,11 +40,7 @@
 	<mvc:view-controller path="/hr/main" view-name="/hr/main" />
 	<mvc:view-controller path="/error/autherror" view-name="/error/autherror" />
 	
-	<beans:bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
-		<beans:property name="maxUploadSize">
-			<beans:value>50000000</beans:value>
-		</beans:property>
-	</beans:bean>
+	
 	
 	<!-- controller에서 딱히 기능을 안하니까 바로 login으로 보내도록 처리 -->
 	<mvc:view-controller path="/login" view-name="login"/>

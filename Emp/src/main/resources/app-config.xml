@@ -57,6 +57,12 @@ class="org.jasypt.encryption.pbe.StandardPBEStringEncryptor">
 <bean id="bcryptPasswordEncoder"
 class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
 
+<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+	<property name="maxUploadSize">
+		<value>50000000</value>
+	</property>
+</bean>
+
 
 <context:component-scan base-package="study.spring.emp" />
 <context:component-scan base-package="com.coderby.myapp" />

@@ -16,16 +16,17 @@
 	<security:intercept-url pattern="/hr/delete" access="hasRole('ROLE_ADMIN')" />
 	<security:intercept-url pattern="/hr/*" access="permitAll" />
 	
-	<security:intercept-url pattern="/file/delete/*" access="hasRole('ROLE_USER')"/>
+	<security:intercept-url pattern="/file/delete/*" access="hasAnyRole('ROLE_USER','ROLE_ADMIN')"/>
 	<security:intercept-url pattern="/file/new" access="hasRole('ROLE_USER')"/>
 	
+	<security:intercept-url pattern="/member/list" access="hasAnyRole('ROLE_ADMIN','ROLE_MASTER')"/>
+	<security:intercept-url pattern="/member/*" access="hasAnyRole('ROLE_USER','ROLE_ADMIN','ROLE_MASTER')"/>
 	
-	<!-- login-page,logout-url 다 컨트롤러에서 처리 
-	/loginCheck로 일단 보내서 인터셉트가 처리 -->
+	<!-- login-page,logout-url 다 컨트롤러에서 처리 , /loginCheck로 일단 보내서 인터셉트가 처리 -->
 	<security:form-login login-page="/login"
 	username-parameter="id" password-parameter="pw"
 	login-processing-url="/loginCheck" 
-	default-target-url="/loginCheck"
+	default-target-url="/"
 	authentication-failure-handler-ref="loginFailHandler" />
 	<security:logout logout-url="/logout" />
 	<security:access-denied-handler error-page="/error/autherror" />
@@ -41,8 +42,14 @@
 <bean id="memberAuthenticationProvider"
 class="com.coderby.myapp.member.auth.MemberAuthenticationProvider" />
 <security:authentication-manager>
-<security:authentication-provider ref="memberAuthenticationProvider" />
+	<security:authentication-provider ref="memberAuthenticationProvider" />
+	<security:authentication-provider>
+		<security:user-service>
+		<security:user name="master" authorities="ROLE_MASTER" password="12"/>
+		</security:user-service>
+	</security:authentication-provider>
 </security:authentication-manager>
+
 
 
 
