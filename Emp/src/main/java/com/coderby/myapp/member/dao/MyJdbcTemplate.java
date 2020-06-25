@@ -1,6 +1,7 @@
 package com.coderby.myapp.member.dao;
 
 
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -43,16 +44,13 @@ public class MyJdbcTemplate extends JdbcTemplate {
 
 			@Override
 			public T mapRow(ResultSet rs, int rowNum) throws SQLException {
-				T result = (T)rs.getObject(1); //어떤 타입인지 모르니까 Object로 받음
-				return result;
+				Object result = rs.getObject(1);
+				if(result instanceof BigDecimal) {
+					return (T)Integer.valueOf(result.toString());
+				}
+				return (T)result;
 			}
 		}, args);
 	}
-	
-	
-	
-	
-	
-	
 	
 }

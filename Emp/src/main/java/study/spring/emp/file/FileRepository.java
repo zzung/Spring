@@ -95,6 +95,12 @@ public class FileRepository implements IFileRepository{
 	}
 
 	@Override
+	public void deleteFile(String userId) {
+		String sql = "delete from ( select * from files where userid=? )";
+		jdbcTemplate.update(sql,userId);
+	}
+	
+	@Override
 	public void updateFile(FileVO file) {
 		String sql = "update files set directory_name=?, file_name=?, file_size=?,"
 				+ "file_content_type=?, file_data=? where file_id=?";
@@ -107,6 +113,7 @@ public class FileRepository implements IFileRepository{
 		String sql = "update files set directory_name=? where file_id=?";
 		jdbcTemplate.update(sql, map.get("directoryName"), map.get("fileId"));
 	}
-	
+
+
 	
 }

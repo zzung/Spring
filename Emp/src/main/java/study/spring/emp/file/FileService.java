@@ -51,6 +51,11 @@ public class FileService implements IFileService{
 	}
 
 	@Override
+	public void deleteFile(String userId) {
+		fileRepository.deleteFile(userId);
+	}
+
+	@Override
 	public void updateFile(FileVO file) {
 		fileRepository.updateFile(file);
 	}
@@ -59,6 +64,7 @@ public class FileService implements IFileService{
 	public void updateDirectory(HashMap<String, Object> map) {
 		fileRepository.updateDirectory(map);
 	}
+
 
 	
 	

@@ -8,8 +8,7 @@
 </head>
 <body>
 <h1>회원 정보 삭제 </h1>
-<input type="button" value="메인으로" onclick="location.href='/emp'">
-<input type="button" value="뒤로" onclick="history.back(-1);"><br>
+<input type="button" value="메인으로" onclick="location.href='/emp/hr/main'">
 삭제하려는 <b>${emp.firstName} ${emp.lastName} </b>은(는)
 <h3> ${count.empCount} </h3> 명의 매니저 이고 <h3> ${count.deptCount} </h3> 개의 부서를 책임지고 있습니다.
 <h3>정말 삭제하시겠습니까 ?</h3>

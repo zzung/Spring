@@ -3,6 +3,7 @@ package com.coderby.myapp.member.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -16,6 +17,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.coderby.myapp.member.dao.IMemberService;
 import com.coderby.myapp.member.model.MemberVO;
+import com.coderby.myapp.util.PagingManager;
 
 @Controller
 @RequestMapping("/member")
@@ -65,26 +67,36 @@ public class MemberController {
 	}
 	
 	@GetMapping("/list")
-	public String memList(Model model) {
-		model.addAttribute("memList",memberService.getMemberList());
+	public String memList(@RequestParam(required=false, defaultValue = "1") int page, @RequestParam(required=false) String keyword, Model model) {
+		model.addAttribute("memList",memberService.getMemberList(page, keyword));
+		model.addAttribute("pageManager", new PagingManager(memberService.getMemberCount(keyword), page));
 		return "member/list";
 	}
-	
+
 	@GetMapping("/delete")
 	public String deleteMember(@RequestParam(value="userId", required=false, defaultValue = "/") String userId, Model model) {
-		model.addAttribute("mem",memberService.getMember(userId));
+		model.addAttribute("member",memberService.getMember(userId));
 		return "member/delete";
 	}
 	
+//	isAuthenticated() --- 익명이 아니라는것 , 인증은 안됀거 
+//	어노테이션 사용했을떄 : #userId==principal.username (내가 provider에서 리턴타입을 memberVO로 했으니까 principal==객체/ userId면 principal==userId)
 	@PostMapping("/delete")
-	public String deleteMember(Model model, String pw) {
+	public String deleteMember(Model model, String pw, String userId) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		String dbpw = memberService.getPassword(authentication.getName());
-		if(!bpe.matches(pw, dbpw)) {
-			throw new RuntimeException("비밀번호가 다릅니다.");	
+		if((authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) || 
+				(authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_MASTER")))){
+			memberService.deleteMember(userId);
+			return "redirect:/member/list";
+		} else {
+			String dbpw = memberService.getPassword(authentication.getName());
+			if(!bpe.matches(pw, dbpw)) {
+				throw new RuntimeException("비밀번호가 다릅니다.");	
+			}else {
+				memberService.deleteMember(userId);
+			}
+			return "redirect:/logout";
 		}
-		memberService.deleteMember(authentication.getName());
-		return "redirect:/member/list";
 	}
 	
 	@PostMapping("/enabled")

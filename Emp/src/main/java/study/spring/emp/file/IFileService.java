@@ -13,8 +13,8 @@ public interface IFileService {
 	public List<FileVO> getFileListBydir(String directoryName);
 	public void updateDirectory(int[] fileIds, String directoryName);
 	public void deleteFile(int fileId);
+	public void deleteFile(String userId);
 	public void updateFile(FileVO file);
 	public void updateDirectory(HashMap<String, Object> map);
-
 
 }

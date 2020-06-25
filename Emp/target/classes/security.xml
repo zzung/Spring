@@ -16,9 +16,10 @@
 	<security:intercept-url pattern="/hr/delete" access="hasRole('ROLE_ADMIN')" />
 	<security:intercept-url pattern="/hr/*" access="permitAll" />
 	
-	<security:intercept-url pattern="/file/delete/*" access="hasAnyRole('ROLE_USER','ROLE_ADMIN')"/>
+	<security:intercept-url pattern="/file/delete/*" access="hasAnyRole('ROLE_USER','ROLE_ADMIN','ROLE_MASTER')"/>
 	<security:intercept-url pattern="/file/new" access="hasRole('ROLE_USER')"/>
 	
+	<security:intercept-url pattern="/member/insert" access="permitAll" />
 	<security:intercept-url pattern="/member/list" access="hasAnyRole('ROLE_ADMIN','ROLE_MASTER')"/>
 	<security:intercept-url pattern="/member/*" access="hasAnyRole('ROLE_USER','ROLE_ADMIN','ROLE_MASTER')"/>
 	
@@ -28,7 +29,7 @@
 	login-processing-url="/loginCheck" 
 	default-target-url="/"
 	authentication-failure-handler-ref="loginFailHandler" />
-	<security:logout logout-url="/logout" />
+	<security:logout logout-url="/logout" logout-success-url="/"/>
 	<security:access-denied-handler error-page="/error/autherror" />
 	<security:csrf disabled="true"/>
 	
@@ -45,7 +46,7 @@ class="com.coderby.myapp.member.auth.MemberAuthenticationProvider" />
 	<security:authentication-provider ref="memberAuthenticationProvider" />
 	<security:authentication-provider>
 		<security:user-service>
-		<security:user name="master" authorities="ROLE_MASTER" password="12"/>
+		<security:user name="master2" authorities="ROLE_MASTER" password="12"/>
 		</security:user-service>
 	</security:authentication-provider>
 </security:authentication-manager>

@@ -39,7 +39,7 @@
 	<mvc:view-controller path="/" view-name="home" />
 	<mvc:view-controller path="/hr/main" view-name="/hr/main" />
 	<mvc:view-controller path="/error/autherror" view-name="/error/autherror" />
-	
+	<mvc:view-controller path="/error/runtime" view-name="/error/runtime" />
 	
 	
 	<!-- controller에서 딱히 기능을 안하니까 바로 login으로 보내도록 처리 -->
@@ -57,5 +57,6 @@
 		</mvc:interceptor>
 	</mvc:interceptors>
 	
+	<security:global-method-security secured-annotations="enabled" pre-post-annotations="enabled" />
 	
 </beans:beans>

@@ -8,9 +8,8 @@
 <title> Employee Insert </title>
 </head>
 <body>
-<h1>사원정보 ${message eq "insert" ? "입력" : "수정"}</h1>
-<input type="button" value="메인으로" onclick="location.href='/emp'">
-<input type="button" value="뒤로" onclick="history.back(-1);"><br>
+<h2>사원정보 ${message eq "insert" ? "입력" : "수정"}</h2>
+<input type="button" value="메인으로" onclick="location.href='/emp/hr/main'">
 <c:choose>
 <%--수정일때 --%>
 <c:when test="${message eq update}">

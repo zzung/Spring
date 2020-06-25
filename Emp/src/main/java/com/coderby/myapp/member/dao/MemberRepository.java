@@ -38,10 +38,10 @@ public class MemberRepository implements IMemberRepository{
 	}
 	
 	@Override
-	public void insertMember(MemberVO mem) {
+	public void insertMember(MemberVO member) {
 		String sql = "insert into member values(?,?,?,?,?,?)";
-		jt.update(sql,mem.getUserId(),mem.getUsername(),mem.getPassword(), mem.getEmail(), 
-				mem.getAddress(),mem.getEnabled());
+		jt.update(sql,member.getUserId(),member.getName(),member.getPassword(), member.getEmail(), 
+				member.getAddress(),member.getEnabled());
 	}
 
 	@Override
@@ -99,24 +99,57 @@ public class MemberRepository implements IMemberRepository{
 	}
 
 	@Override
-	public List<MemberVO> getMemberList() {
-		String sql = "select * from member m " + 
-				"left join authorities au " + 
-				"on m.userid=au.userid ";
-		return jt.query(sql,new RowMapper<MemberVO> () {
-			@Override
-			public MemberVO mapRow(ResultSet rs, int rowNum) throws SQLException {
-				MemberVO mem = new MemberVO();
-				mem.setUserId(rs.getString("userid"));
-				mem.setName(rs.getString("name"));
-				mem.setPassword(rs.getString("password"));
-				mem.setEmail(rs.getString("email"));
-				mem.setAddress(rs.getString("address"));
-				mem.setEnabled(rs.getInt("enabled"));
-				mem.setAuth(rs.getString("authority"));
-				return mem;
-			}
-		});
+	public List<MemberVO> getMemberList(int page, String keyword) { 
+		String sql = null;
+		int start = (page-1)*10+1;
+		int end = start+9;
+		if (keyword == null) {
+			sql = "select rnum, userid, name, email, address, enabled, authority " + 
+					"from (select rownum rnum, userid, name, email, address, enabled, authority " + 
+					"from (select m.userid, name, email, address, enabled, authority " + 
+					"from member m " + 
+					"join authorities a " + 
+					"on m.userid=a.userid " + 
+					"order by m.userid)) " + 
+					"where rnum between ? and ?";
+			return jt.query(sql,new RowMapper<MemberVO> () {
+				@Override
+				public MemberVO mapRow(ResultSet rs, int rowNum) throws SQLException {
+					MemberVO mem = new MemberVO();
+					mem.setUserId(rs.getString("userid"));
+					mem.setName(rs.getString("name"));
+					mem.setEmail(rs.getString("email"));
+					mem.setAddress(rs.getString("address"));
+					mem.setEnabled(rs.getInt("enabled"));
+					mem.setAuth(rs.getString("authority"));
+					return mem;
+				}
+			}, start,end);
+		}else {
+			keyword = "%"+keyword+"%";
+			sql = "select rnum, userid, name, email, address, enabled, authority " + 
+					"from (select rownum rnum, userid, name, email, address, enabled, authority " + 
+					"from (select m.userid, name, email, address, enabled, authority " + 
+					"from member m " + 
+					"join authorities a " + 
+					"on m.userid=a.userid " + 
+					"order by m.userid)) " + 
+					"where rnum between ? and ? and userid like keyword or name like keyword";
+			return jt.query(sql,new RowMapper<MemberVO> () {
+				@Override
+				public MemberVO mapRow(ResultSet rs, int rowNum) throws SQLException {
+					MemberVO mem = new MemberVO();
+					mem.setUserId(rs.getString("userid"));
+					mem.setName(rs.getString("name"));
+					mem.setEmail(rs.getString("email"));
+					mem.setAddress(rs.getString("address"));
+					mem.setEnabled(rs.getInt("enabled"));
+					mem.setAuth(rs.getString("authority"));
+					return mem;
+				}
+			}, start,end);
+		}
+		
 	}
 
 	@Override
@@ -173,6 +206,20 @@ public class MemberRepository implements IMemberRepository{
 				return mem;
 			}
 		}, kw,kw);
+	}
+
+	@Override
+	public int getMemberCount(String keyword) {
+		String sql = "null";
+		if (keyword==null) {
+			sql = "select count(*) from member";
+			return jt.queryForNullableObject(sql, Integer.class);
+		}else {
+			keyword = "%"+keyword+"%";
+			sql = "select count(*) from member "
+					+ "where userid like keyword or name like keyword";
+		}
+		return jt.queryForNullableObject(sql, Integer.class);
 	}
 
 

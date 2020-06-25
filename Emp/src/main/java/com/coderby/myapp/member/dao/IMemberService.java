@@ -15,12 +15,12 @@ public interface IMemberService {
 	void deleteAuthority(String userId);
 	MemberVO getMember(String userId);
 	String getPassword(String userId);
-	List<MemberVO> getMemberList();
+	List<MemberVO> getMemberList(int page, String keyword);
 	void changeEnabled(String userId);
 	List<AuthoritiesVO> getAuthorityList();
 	void changeAuth(String userId,String auth);
 	List<MemberVO> searchMember(String keyword);
-
+	int getMemberCount(String keyword);
 
 	
 }

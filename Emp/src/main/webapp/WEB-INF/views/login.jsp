@@ -8,6 +8,7 @@
 <title>Login</title>
 </head>
 <body>
+<input type="button" value="메인으로" onclick="location.href='/emp'">
 <sec:authorize access="isAnonymous()">
 	${message}
 	<form action="loginCheck" method="post">

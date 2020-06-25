@@ -8,8 +8,7 @@
 <title> Employee Count </title>
 </head>
 <body>
-<h1> ${message eq "allEmpCount"? "총 사원 수 ":"부서별 사원 수 "} : ${count} 명</h1>
-<input type="button" value="메인으로" onclick="location.href='/emp'">
-<input type="button" value="뒤로" onclick="history.back(-1);"><br>
+<h2> ${message eq "allEmpCount"? "총 사원 수 ":"부서별 사원 수 "} --> ${count} 명</h2>
+<input type="button" value="메인으로" onclick="location.href='/emp/hr/main'">
 </body>
 </html>

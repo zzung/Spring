@@ -35,15 +35,17 @@
 	</tr>
 </table>
 <a href="update?userId=${member.userId}">정보 수정</a><br>
-<form action="delete" method="post">
-<br>비밀번호 입력 : <input type="password" name=pw> 
-<input type=submit value="탈 퇴"><br>
+<form name="delete" action="delete" method="post">
+	<input type="hidden" name="userId" value="${member.userId}">
+	<br>비밀번호 입력 : <input type="password" name=pw> 
+	<input type=submit class="delete" value="탈 퇴"><br>
+	
 </form>
 <sec:authorize access="hasAnyRole('ROLE_ADMIN','ROLE_MASTER')">
 	<h2>계정 설정</h2>
 		<form action="enabled" method="post">
 		<input type="hidden" name="userId" value="${member.userId}" />
-		<input type="checkbox" name= "enabled" /> 활성화
+		<input type="checkbox" name= "enabled" /> 활성/비활성 화
 		<input type=submit value="적 용"><br>
 		</form>
 </sec:authorize>
@@ -62,15 +64,11 @@
 
 
 <script type="text/javascript">
-	$(document).ready(function(){
-	$(".delete").click(function(){
-	if(confirm("탈퇴 하시겠습니까?")){
-		return true;
-	}else{
-		return false;
+	function delete(){
+		var deleteForm = document.delete;
+		alert("탈퇴 하시겠습니까?")
+		deleteForm.submit();
 	}
-	})
-	});
 </script>
 
 </body>

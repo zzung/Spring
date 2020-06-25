@@ -7,9 +7,8 @@
 <title> Employee View </title>
 </head>
 <body>
-<h1> 사원 정보 상세 조회 </h1>
-<input type="button" value="메인으로" onclick="location.href='/emp'">
-<input type="button" value="뒤로" onclick="history.back(-1);">
+<h2> 사원 정보 상세 조회 </h2>
+<input type="button" value="메인으로" onclick="location.href='/emp/hr/main'">
 <table border="1">
 <tr>
 	<th> Employee_id</th>

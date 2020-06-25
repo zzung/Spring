@@ -37,6 +37,23 @@
 	<td>${mem.enabled}</td>
 </tr>
 </c:forEach>
+
+<tr>
+	<td colspan=5>
+	<h6>
+	[<a href="list?page=1">처음</a>]
+	<c:if test="${pageManager.nowBlock gt 1}">
+		[<a href="list?page=${pageManager.startPage-1}">이전</a>]
+	</c:if>
+	<c:forEach var="i" begin="${pageManager.startPage}" end="${pageManager.endPage}">
+		[<a href="list?page=${i}">${i}</a>]
+	</c:forEach>
+	<c:if test="${pageManager.nowBlock < pageManager.totalBlock}">
+		[<a href="list?page=${pageManager.endPage+1}">다음</a>]
+	</c:if>
+	</h6>
+	</td>
+</tr>
 </table>
 </body>
 </html>

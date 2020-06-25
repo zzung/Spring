@@ -10,11 +10,16 @@ import org.springframework.transaction.annotation.Transactional;
 import com.coderby.myapp.member.model.AuthoritiesVO;
 import com.coderby.myapp.member.model.MemberVO;
 
+import study.spring.emp.file.IFileRepository;
+
 @Service
 public class MemberService implements IMemberService {
 
 	@Autowired
 	IMemberRepository memRepository;
+	@Autowired
+	IFileRepository fileRepository;
+	
 	
 	@Transactional("txManager")
 	@Override
@@ -33,13 +38,11 @@ public class MemberService implements IMemberService {
 		return memRepository.getPassword(userId);
 	}
 
-	@Transactional("txManager")
 	@Override
 	public void insertAuth(String userId) {
 		memRepository.insertAuth(userId);
 	}
 
-	@Transactional("txManager")
 	@Override
 	public void updateMember(MemberVO mem) {
 		memRepository.updateMember(mem);
@@ -48,13 +51,14 @@ public class MemberService implements IMemberService {
 	@Transactional("txManager")
 	@Override
 	public void deleteMember(String userId) {
+		fileRepository.deleteFile(userId);
 		memRepository.deleteAuthority(userId);
 		memRepository.deleteMember(userId);
 	}
 
 	@Override
-	public List<MemberVO> getMemberList() {
-		return memRepository.getMemberList();
+	public List<MemberVO> getMemberList(int page, String keyword) {
+		return memRepository.getMemberList(page, keyword);
 	}
 
 	@Override
@@ -80,6 +84,11 @@ public class MemberService implements IMemberService {
 	@Override
 	public List<MemberVO> searchMember(String keyword) {
 		return memRepository.searchMember(keyword);
+	}
+
+	@Override
+	public int getMemberCount(String keyword) {
+		return memRepository.getMemberCount(keyword);
 	}
 
 	

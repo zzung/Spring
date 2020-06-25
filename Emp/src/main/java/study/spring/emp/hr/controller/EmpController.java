@@ -43,7 +43,7 @@ public class EmpController {
 	}
 	
 	@RequestMapping("/hr/main")
-	public String empMain() {
+	public String empMain(Model model) {
 		return "/hr/main";
 	}
 	
@@ -117,7 +117,7 @@ public class EmpController {
 		
 		if(result.hasErrors()) { //에러가 있는지 없는지 리턴해줌(페이지에서 뜨게해줘야함,다시 insert로 보내서 에러메세지를 띄워줘야함)
 //			model.addAttribute("emp",emp);
-//			model.addAttribute("error",error); ---------------커맨드객체 안에 그대로 들어있어서 또 설정 안해도됨!
+//			model.addAttribute("error",error); ---------------커맨드객체 안에 그대로 들어있어서 또 설정l 안해도됨!
 			model.addAttribute("jobList",empService.getAllJobId());
 			model.addAttribute("manList",empService.getAllManagerId());
 			model.addAttribute("deptList",empService.getAllDeptId());
@@ -130,10 +130,8 @@ public class EmpController {
 	}
 	
 	//사원번호로 사원 정보 조회
-	@GetMapping(value="/hr/{employeeId}")
-	public String empView(Model model, @PathVariable int employeeId) {
-		//경로에있는 employeeId값을 int employeeId에 주겠다는 뜻
-		//@PathVariable : 경로를 매핑시킨다는 뜻 , 기본값을 지정할수없음, 무조건 들어와야하는값이 있을때 사용.
+	@GetMapping(value="/hr/view")
+	public String empView(Model model,@RequestParam(value="employeeId", required = true) int employeeId) {
 		model.addAttribute("emp", empService.getEmpInfo(employeeId));
 		return "hr/view";
 	}

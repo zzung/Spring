@@ -1,6 +1,7 @@
 package study.spring.emp.file.controller;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -8,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -93,23 +95,41 @@ public class FileController {
 		return "file/list";
 	}
 	
-	@GetMapping("file/list/{dir}")
+	@RequestMapping("/file/list/{dir}")
 	public String getFileListByDir(@PathVariable String dir, Model model) {
 		model.addAttribute("fileList",fileService.getFileListBydir("/"+dir));
-		return "/file/list";
+		return "file/list";
 	}
 	
 	@RequestMapping("/file/updateDir")
-	public String updateDirectory(int[] fileIds, String directoryName) {
-		fileService.updateDirectory(fileIds,directoryName);
-		return "redirect:/file/list";
+	public String updateDirectory(int[] fileIds, String directoryName, String[] userId) {
+		System.out.println(Arrays.toString(userId));
+		//체크박스를 선택했을때 fileId & userId 넘기기
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if((authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN")))
+				||(authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_MASTER")))) {
+			//권한 인증 --security가 하니까 알아볼수있는 권한 형태로 바꿔줘야함 (리턴타입 : collection<? extends GrantedAuthority>)
+	
+		}else {
+			for(String Id:userId) {
+				if(!authentication.getName().equals(Id)) {
+					return "redirect:/error/runtime";
+				}
+			}
+		}
+			fileService.updateDirectory(fileIds,directoryName);
+			return "redirect:/file/list";
 	}
 	
 	@RequestMapping("/file/delete/{fileId}")
 	public String deleteFile(@PathVariable int fileId, String userId) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		String url = "";
-		if(authentication.getName().equals(userId)) {
+		if(authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN")) ||
+				authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_MASTER"))) {
+			fileService.deleteFile(fileId);
+			url ="redirect:/file/list";
+		}else if(authentication.getName().equals(userId)) {
 			fileService.deleteFile(fileId);
 			url ="redirect:/file/list";
 		}else {
@@ -122,6 +142,7 @@ public class FileController {
 	public void getFileInfo(int fileId, Model model) {
 		model.addAttribute("file",fileService.getFile(fileId));
 	}
+	
 	
 	
 	

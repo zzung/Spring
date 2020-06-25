@@ -34,7 +34,8 @@
 <tr>
 <th colspan=2>	
 <input type="submit" value="입 력">
-<input type="reset" value="취 소">
+<input type="reset" value="초기화">
+<input type="button" value="취 소" onclick="location.href='/emp'">
 </th>
 </tr>
 </table>
