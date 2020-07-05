@@ -16,7 +16,7 @@
 <script src="//code.jquery.com/jquery-3.5.1.min.js"></script>
 </head>
 <body>
-	<input type="button" value="메인으로 " onclick="location.href='../file/'">
+	<input type="button" value="메인으로 " onclick="location.href='../'">
 	<form action=updateDir method=post enctype="multipart/form-data"
 		class="form-horizontal" onsubmit="addId();"> <%--버튼은 onclick, 폼은 onsubmit(눌렀을때 실행되는것) --%>
 		<table border="1">

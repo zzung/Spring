@@ -8,6 +8,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -38,11 +39,13 @@ public class FileController {
 		return mav;
 	}
 	
+	@PreAuthorize("isAuthenticated() and (hasRole('ROLE_USER'))")
 	@GetMapping("/file/new")
 	public String uploadFile(Model model) {
 		return "/file/new";
 	}
 	
+	@PreAuthorize("isAuthenticated() and (hasRole('ROLE_USER'))")
 	@PostMapping("/file/new")
 	//requestparam은 값이 꼭 들어와야할때 사용
 	public String uploadFile(@RequestParam(value="dir",required=false, defaultValue="/") String dir,
@@ -121,6 +124,7 @@ public class FileController {
 			return "redirect:/file/list";
 	}
 	
+	@PreAuthorize("isAuthenticated() and (hasAnyRole('ROLE_USER','ROLE_ADMIN','ROLE_MASTER') or (principal.username == #userId))")
 	@RequestMapping("/file/delete/{fileId}")
 	public String deleteFile(@PathVariable int fileId, String userId) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -142,8 +146,5 @@ public class FileController {
 	public void getFileInfo(int fileId, Model model) {
 		model.addAttribute("file",fileService.getFile(fileId));
 	}
-	
-	
-	
 	
 }

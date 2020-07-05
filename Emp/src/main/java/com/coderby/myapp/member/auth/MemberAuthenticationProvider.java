@@ -60,10 +60,13 @@ public class MemberAuthenticationProvider implements AuthenticationProvider {
 		String password = (String)authentication.getCredentials();
 		String dbpw = memberService.getPassword(userId);
 		if(dbpw==null) {
+			System.out.println("아이디없음");
 			throw new InternalAuthenticationServiceException("아이디가 없습니다.");
 //			throw new UsernameNotFoundException(msg); ---BadCredentialsException으로 넘겨버려서 메시지 전달못함
 		}
 		if(!bpe.matches(password, dbpw)) { //원래 비번이랑 암호화된 비번 비교
+			System.out.println(password);
+			System.out.println("여긴가?");
 			throw new BadCredentialsException("비밀번호가 다릅니다.");	//null이면 anonyMousUser라고 저장
 		}
 		MemberVO member = memberService.getMember(userId);

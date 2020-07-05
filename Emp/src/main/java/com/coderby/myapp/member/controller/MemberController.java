@@ -1,6 +1,7 @@
 package com.coderby.myapp.member.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -45,14 +46,15 @@ public class MemberController {
 		redirectAttributes.addFlashAttribute("message","회원 가입 완료");
 		return "redirect:/login";
 	}
-	
+
+	@PreAuthorize("isAuthenticated() and (hasAnyRole('ROLE_ADMIN','ROLE_MASTER') or #userId==principal.username)")
 	@GetMapping("/info")
 	public String memberInfo(Model model, @RequestParam(value="userId",required=false, defaultValue="/") String userId) {
 		model.addAttribute("member",memberService.getMember(userId));
 		model.addAttribute("authList",memberService.getAuthorityList());
 		return "member/info";
 	}
-	
+	@PreAuthorize("isAuthenticated() and (hasAnyRole('ROLE_ADMIN','ROLE_MASTER') or #userId==principal.username)")
 	@GetMapping("/update")
 	public String updateMember(Model model, @RequestParam(value="userId",required=false, defaultValue="/") String userId) {
 		model.addAttribute("member",memberService.getMember(userId));
@@ -60,19 +62,22 @@ public class MemberController {
 		return "member/insert";
 	}
 	
+	@PreAuthorize("isAuthenticated() and (hasAnyRole('ROLE_ADMIN','ROLE_MASTER') or #member.userId==principal.username)")
 	@PostMapping("/update")
 	public String updateMember(MemberVO member) {
 		memberService.updateMember(member);
 		return "redirect:/member/info?userId="+member.getUserId();
 	}
 	
+	@PreAuthorize("isAuthenticated() and hasAnyRole('ROLE_ADMIN', 'ROLE_MASTER')")
 	@GetMapping("/list")
 	public String memList(@RequestParam(required=false, defaultValue = "1") int page, @RequestParam(required=false) String keyword, Model model) {
 		model.addAttribute("memList",memberService.getMemberList(page, keyword));
 		model.addAttribute("pageManager", new PagingManager(memberService.getMemberCount(keyword), page));
 		return "member/list";
 	}
-
+	
+	@PreAuthorize("isAuthenticated() and (hasAnyRole('ROLE_ADMIN','ROLE_MASTER') or #userId==principal.username)")
 	@GetMapping("/delete")
 	public String deleteMember(@RequestParam(value="userId", required=false, defaultValue = "/") String userId, Model model) {
 		model.addAttribute("member",memberService.getMember(userId));
@@ -81,6 +86,7 @@ public class MemberController {
 	
 //	isAuthenticated() --- 익명이 아니라는것 , 인증은 안됀거 
 //	어노테이션 사용했을떄 : #userId==principal.username (내가 provider에서 리턴타입을 memberVO로 했으니까 principal==객체/ userId면 principal==userId)
+	@PreAuthorize("isAuthenticated() and (hasAnyRole('ROLE_USER','ROLE_ADMIN','ROLE_MASTER'))")
 	@PostMapping("/delete")
 	public String deleteMember(Model model, String pw, String userId) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

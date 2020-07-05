@@ -7,6 +7,7 @@ import javax.validation.Valid;
 import javax.validation.Validator;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -27,7 +28,6 @@ import study.spring.emp.hr.dao.IEmpService;
 import study.spring.emp.hr.model.EmpVO;
 
 @Controller
-//@RequestMapping("/hr") ----@Controller랑 같이 사용가능함
 public class EmpController {
 	
 	@Autowired
@@ -48,6 +48,7 @@ public class EmpController {
 	}
 	
 	//사원 정보 삭제
+	@PreAuthorize("isAuthenticated() and hasAnyRole('ROLE_ADMIN','ROLE_MASTER')")
 	@GetMapping(value="/hr/delete")
 	public String empDelete(@RequestParam(value="empId", required=false, defaultValue = "0") int empId, Model model) {
 		model.addAttribute("emp",empService.getEmpInfo(empId));
@@ -56,6 +57,7 @@ public class EmpController {
 		}
 	
 	//삭제 후 목록으로 보내기
+	@PreAuthorize("isAuthenticated() and hasAnyRole('ROLE_ADMIN','ROLE_MASTER')")
 	@PostMapping(value="/hr/delete")
 	public String empDelete(Model model, int empId) {
 		empService.changeManager(empId);
@@ -63,19 +65,7 @@ public class EmpController {
 		empService.deleteEmp(empId);
 		return "redirect:/hr/list";
 	}
-	
-/*
-	@GetMapping(value="/hr/update/{employeeId}")
-	public String empUpdate2(Model model, @PathVariable int empId) {
-		model.addAttribute("emp",empService.getEmpInfo(empId));
-		model.addAttribute("jobList",empService.getAllJobId());
-		model.addAttribute("manList",empService.getAllManagerId());
-		model.addAttribute("deptList",empService.getAllDeptId());
-		model.addAttribute("message","update");
-		return "hr/insert";
-	}
-*/
-	
+
 	//사원 정보 수정
 	@GetMapping(value="/hr/update")
 	public String empUpdate(Model model, @RequestParam(value="empId", required=false, defaultValue = "0") int empId) {
@@ -85,7 +75,7 @@ public class EmpController {
 		model.addAttribute("deptList",empService.getAllDeptId());
 		model.addAttribute("message","update");
 		return "hr/insert";
-	}
+	}	
 	
 	//사원 정보 수정 후 목록으로 보내기
 	@PostMapping(value="/hr/update")
@@ -96,7 +86,7 @@ public class EmpController {
 
 	
 	//사원 정보 입력
-	@GetMapping(value="/hr/insert") //메서드 경로 
+	@GetMapping(value="/hr/insert") 
 	public void empInsert(Model model) {
 		model.addAttribute("emp",new EmpVO()); //빈객체 하나 던져줌 (유효성검사하는 용도)
 		model.addAttribute("jobList",empService.getAllJobId());
@@ -114,10 +104,9 @@ public class EmpController {
 		//				---에러메세지가 담겨있음
 		//입력하고 저장하면 ? 리스트로 감 --> 객체 필요x
 		//파라미터에 있는 "EmpVO emp == 커맨드 객체" ----요청할때 들어온 model(emp객체)가 응답할때 "그대로" emp객체로 내보냄.
-		
 		if(result.hasErrors()) { //에러가 있는지 없는지 리턴해줌(페이지에서 뜨게해줘야함,다시 insert로 보내서 에러메세지를 띄워줘야함)
 //			model.addAttribute("emp",emp);
-//			model.addAttribute("error",error); ---------------커맨드객체 안에 그대로 들어있어서 또 설정l 안해도됨!
+//			model.addAttribute("error",error); ---------------커맨드객체 안에 그대로 들어있어서 또 설정 안해도됨!
 			model.addAttribute("jobList",empService.getAllJobId());
 			model.addAttribute("manList",empService.getAllManagerId());
 			model.addAttribute("deptList",empService.getAllDeptId());
@@ -137,14 +126,14 @@ public class EmpController {
 	}
 	
 	//전체 사원 목록
-	@GetMapping(value="/hr/list") //주소창에 입력하는 주소
+	@GetMapping(value="/hr/list")
 	public void empList(Model model) {	
 		model.addAttribute("list",empService.getEmpList());
 		model.addAttribute("message","getEmpList");
 	}
 	
 	//부서별 사원 인원수
-	@GetMapping(value="/hr/count") // /hr/count?deptId=10 라고 지정해놓으면 자동으로 형변환까지 해줘서 deptId에 넣어줌.
+	@GetMapping(value="/hr/count")
 	public String empCount(@RequestParam(value="deptId", required=false, defaultValue = "0") int deptId, Model model) {
 		if(deptId==0) {
 			model.addAttribute("count", empService.getEmpCount());
@@ -155,9 +144,6 @@ public class EmpController {
 		}
 		return "hr/count";
 	}
-	//required=false 는 deptId 지정안해도 상관없다는 뜻 true면 반드시 지정해줘야함
-	//model : 데이터 넣기만 하는(저장하는) 용도로 쓰임 , 요청하나에 모델하나 넣어서 만드는 식 / 데이터 꺼내는건 el표현식으로 
-	//return 값에 "/hr/count" 앞에 /안붙이는 이유 ? 앞뒤로 /WEB-INF/views/ 붙으니까 붙일 필요 x
 	//@RequestParam : request.getparameter 했던 것들을 자동으로 값을 변수에 매핑시켜주는 용도
 	
 	
@@ -176,9 +162,6 @@ public class EmpController {
 		model.addAttribute("message","haveAboveAvgSalaryByDept");
 		return "hr/list";
 	}
-	
-	
-	
 	
 //	------------------------------------------------------------------------------------------------------
 	//예외처리-컴파일 예외/런타임예외 두가지가있음, 
@@ -218,13 +201,4 @@ public class EmpController {
 	 * 모델 만들어지고 세팅되는 순서 p167
 	 */
 	
-	
-	
 }
-
-
-
-
-
-
-
