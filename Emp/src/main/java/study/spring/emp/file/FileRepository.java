@@ -37,7 +37,7 @@ public class FileRepository implements IFileRepository{
 	
 	@Override
 	public int getMaxFileId() {
-		String sql = "select nvl(max(file_Id),0) from files";
+		String sql = "select nvl(max(file_id),0) from files";
 		// nvl(null이 들어올수도있는값, null일때 바꿀 값)
 		return jdbcTemplate.queryForObject(sql, Integer.class);
 	}

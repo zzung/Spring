@@ -16,6 +16,7 @@
 <sec:authorize access="isAuthenticated()">
 	<sec:authentication property="principal.username" var="username"/> ${username}님 환영합니다.
 	<form action=logout method=post>
+	<input type=hidden name="${_csrf.parameterName}" value="${_csrf.token}">
 	<input type=submit value="로그아웃">
 	</form>
 	<br>

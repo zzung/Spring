@@ -8,6 +8,7 @@
 <body>
 <form action="new" method=post
 enctype="multipart/form-data">
+<input type=hidden name="${_csrf.parameterName}" value="${_csrf.token}">
 	<select name="dir">
 		<option value="/">/
 		<option value="/images">이미지

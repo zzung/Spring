@@ -20,10 +20,10 @@
 <form action="" name="form">
 # 디렉토리 목록: <select id="dir">
 		<option value="/">/
-		<option value="/images">이미지
+		<option value="/image">이미지
 		<option value="/data">자료실
 		<option value="/spring">스프링
-		<option value="/general">공통
+		<option value="/commons">공통
 </select>
 <input type=submit value="조회" id="form">
 </form><br>

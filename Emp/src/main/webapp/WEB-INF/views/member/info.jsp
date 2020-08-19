@@ -36,6 +36,7 @@
 </table>
 <a href="update?userId=${member.userId}">정보 수정</a><br>
 <form name="delete" action="delete" method="post">
+	<input type=hidden name="${_csrf.parameterName}" value="${_csrf.token}">
 	<input type="hidden" name="userId" value="${member.userId}">
 	<br>비밀번호 입력 : <input type="password" name=pw> 
 	<input type=submit class="delete" value="탈 퇴"><br>

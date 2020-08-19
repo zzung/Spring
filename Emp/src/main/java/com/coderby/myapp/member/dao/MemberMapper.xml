@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.coderby.myapp.member.dao.IMemberRepository">
+	<insert id="insertMember" parameterType="com.coderby.myapp.member.model.MemberVO">
+		insert into member values(#{userId},#{name},#{password},#{email},
+		#{address},#{enabled})
+	</insert>
+	
+	<insert id="insertAuth" parameterType="string">
+		insert into authorities values(#{userId},"ROLE_USER")
+	</insert>
+	
+	<update id="updateMember" parameterType="com.coderby.myapp.member.model.MemberVO">
+		update member set name=#{name}, email=#{email}, address=#{address},
+		 enabled=#{enabled} where userid=#{userId}
+	</update>
+	
+	<delete id="deleteMember" parameterType="string">
+		delete from member where userid=#{userId}
+	</delete>
+	
+	<delete id="deleteAuthority" parameterType="string">
+		delete from authorities where userid=#{userId}
+	</delete>
+	
+	<select id="getMember" parameterType="string" resultType="com.coderby.myapp.member.model.MemberVO">
+		select m.userid as userId, name, password, email, address, enabled, authority as auth 
+		from member m 
+		join authorities au 
+		on m.userid=au.userid 
+		where m.userid=#{userId}
+	</select>
+	
+	<select id="">
+		select rnum, userid as userId, name, email, address, enabled, authority as auth 
+		from (select rownum rnum, userid, name, email, address, enabled, authority 
+			 from (select m.userid, name, email, address, enabled, authority 
+			 from member m 
+			 join authorities a 
+			 on m.userid=a.userid 
+			 order by m.userid)) 
+		<if test="keyword==null">
+			where rnum between ((#{page}-1*10+1) and (#{page}-1*10+1+9))
+		</if>
+		<if test="keyword!=null">
+			where rnum between ? and ? and userid like keyword or name like keyword
+		</if>
+	</select>
+	
+	<update id="">
+		select case when
+	</update>
+
+</mapper>

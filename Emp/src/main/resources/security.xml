@@ -22,7 +22,6 @@
 	authentication-failure-handler-ref="loginFailHandler" />
 	<security:logout logout-url="/logout" logout-success-url="/"/>
 	<security:access-denied-handler error-page="/error/autherror" />
-	<security:csrf disabled="true"/>
 	
 	<!-- 중복로그인 막는거  -->
 	<security:session-management>

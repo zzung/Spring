@@ -20,6 +20,7 @@ public interface IMemberRepository {
 	void changeAuth(String userId,String auth);
 	List<MemberVO> searchMember(String keyword);
 	int getMemberCount(String keyword);
+	Integer checkUserId(String userId);
 	
 	
 }

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,6 +16,7 @@ import study.spring.emp.hr.model.EmpVO;
 public class EmpService implements IEmpService {
 
 	@Autowired
+	@Qualifier("IEmpRepository") //해당 타입빈이 여러개일경우 
 	IEmpRepository empRepository;
 	
 	

@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="study.spring.emp.hr.dao.IEmpRepository">
+<!-- IEmprepository 의 구현체 -->
+	<resultMap id="empMap" type="study.spring.emp.hr.model.EmpVO">
+		<result property="employeeId" column="employee_id" />
+		<result property="firstName" column="first_name" />
+		<result property="lastName" column="last_name" />
+		<result property="email" column="email" />
+		<result property="phoneNumber" column="phone_number" />
+		<result property="hireDate" column="hire_date" />
+		<result property="jobId" column="job_id" />
+		<result property="salary" column="salary" />
+		<result property="commissionPct" column="commission_pct" />
+		<result property="managerId" column="manager_id" />
+		<result property="departmentId" column="department_id" />
+	</resultMap>
+	
+
+	<select id = "empList" resultMap="empMap">
+		select * from employees
+	</select>
+	
+	<select id="empCount" parameterType="int" resultType="int">
+		select count(*) from employees
+		<if test="deptId != null">
+			where department_id = #{deptId}
+		</if>
+	</select>
+	
+	<select id="getEmpInfo" parameterType="int" resultType="study.spring.emp.hr.model.EmpDetailVO">
+		select e.employee_id as employeeId, first_name as firstName, last_name as lastName, email, 
+		phone_number as phoneNumber, hire_date as hireDate, e.job_id as jobId, job_title as jobTitle,
+		salary, commission_pct as commissionPct, e.manager_id as managerId, manager_name as managerName, 
+		e.department_id as departmentId, department_name as departmentName 
+		from employees e 
+		left join departments d 
+		on d.department_id = e.department_id 
+		left join jobs j  
+		on j.job_id = e.job_id 
+		left join (select employee_id, first_name||' '||last_name as manager_name 
+		from employees 
+		where employee_id in (select distinct manager_id from employees)) m 
+		on m.employee_id=e.manager_id 
+		where e.employee_id= #{empId}
+	</select>
+	
+	<update id="updateEmp" parameterType="study.spring.emp.hr.model.EmpVO">
+		update employees set first_name=#{firstName}, last_name=#{lastName},
+		phone_number=#{phoneNumber}, hire_date=#{hireDate}, job_id=#{jobId},
+		salary=#{salary}, commission_pct=#{commissionPct}, manager_id=#{managerId},
+		department_id=#{departmentId} where employee_id=#{employeeId}
+	</update>
+	
+	<insert id="insertEmp" parameterType="study.spring.emp.hr.model.EmpVO">
+		insert into employees values(#{employeeId}, #{firstName}, #{lastName},
+		#{email}, #{phoneNumber}, SYSDATE, #{jobId}, #{salary}, #{commissionPct},
+		#{managerId}, #{departmentId})
+	</insert>
+	
+	<delete id="deleteEmp" parameterType="int">
+		delete from employees where employee_id=#{empId}
+	</delete>
+	
+	<delete id="deleteJobHistory" parameterType="int" >
+		delete from job_history where employee_id=#{empId}
+	</delete>
+	
+	<!-- resultType이 Map인 경우는 key를 쌍따옴표로 감싸줘야됨 -->
+	<select id="getAllDeptId" resultType="hashmap">
+		select department_id as "departmentId", department_name as "departmentName" from departments
+	</select>
+	
+	<select id="getAllJobId" resultType="hashmap">
+		select job_id as "jobId", job_title as "jobTitle" from jobs
+	</select>
+	
+	<select id="getAllManagerId" resultType="hashmap">
+		select employee_id as "managerId", 
+		first_name||' '||last_name as "managerName" 
+		from employees 
+		where employee_id in(select distinct manager_id from employees)
+	</select>
+	
+	<select id="maxSalary" resultMap="empMap">
+		select * from employees 
+		where (department_id, salary) 
+		in (select department_id, max(salary) from employees group by department_id)
+	</select>
+	
+	<select id="haveAboveAvgSalaryByDept" resultMap="empMap">
+		select * from (select * from employees e 
+		join (select department_id, avg(salary) as avg_salary
+		from employees group by department_id) d
+		on e.department_id = d.department_id) 
+		where salary > avg_salary
+	</select>
+	
+	<update id="changeManager" parameterType="study.spring.emp.hr.model.EmpVO">
+		{
+		call
+			begin
+				update employees set manager_id=null where manager_id=#{empId};
+				update departments set manager_id=null where manager_id=#{empId};
+			end
+		}
+	</update>
+	
+	<select id="empGetCount" parameterType="int" resultType="hashmap">
+		select (select count(*) from employees where manager_id=#{empId}) as "empCount", 
+		(select count(*) from departments where manager_id=#{empId}) as "deptCount" from dual
+	</select>
+	
+	
+	
+</mapper>

@@ -41,7 +41,7 @@ public class MemberRepository implements IMemberRepository{
 	public void insertMember(MemberVO member) {
 		String sql = "insert into member values(?,?,?,?,?,?)";
 		jt.update(sql,member.getUserId(),member.getName(),member.getPassword(), member.getEmail(), 
-				member.getAddress(),member.getEnabled());
+				member.getAddress(),1);
 	}
 
 	@Override
@@ -89,7 +89,7 @@ public class MemberRepository implements IMemberRepository{
 		String sql = "update member set name=?, email=?, address=?, enabled=? "
 				+ "where userid=?";
 		jt.update(sql, member.getName(), member.getEmail(),
-				member.getAddress(), member.getEnabled(), member.getUserId());
+				member.getAddress(), 1, member.getUserId());
 	}
 
 	@Override
@@ -220,6 +220,12 @@ public class MemberRepository implements IMemberRepository{
 					+ "where userid like keyword or name like keyword";
 		}
 		return jt.queryForNullableObject(sql, Integer.class);
+	}
+
+	@Override
+	public Integer checkUserId(String userId) {
+		String sql = "select count(*) from member where userid=?";
+		return jt.queryForNullableObject(sql, Integer.class, userId);
 	}
 
 

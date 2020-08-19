@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +17,7 @@ import study.spring.emp.file.IFileRepository;
 public class MemberService implements IMemberService {
 
 	@Autowired
+	@Qualifier("memberRepository")
 	IMemberRepository memRepository;
 	@Autowired
 	IFileRepository fileRepository;
@@ -89,6 +91,11 @@ public class MemberService implements IMemberService {
 	@Override
 	public int getMemberCount(String keyword) {
 		return memRepository.getMemberCount(keyword);
+	}
+
+	@Override
+	public Integer checkUserId(String userId) {
+		return memRepository.checkUserId(userId);
 	}
 
 	

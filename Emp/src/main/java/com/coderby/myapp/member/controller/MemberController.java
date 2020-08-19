@@ -12,8 +12,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.coderby.myapp.member.dao.IMemberService;
@@ -124,6 +127,13 @@ public class MemberController {
 		return "member/list";
 	}
 	
+	@ResponseBody //ajax 요청이 들어온 주소에 그대로 0 or 1 보내짐 --> xhr.responseText 나 jquery의 success 메서드 매개변수에 0or1 전달
+	@PostMapping("/check")
+//	@RequestMapping(value="/", method=RequestMethod.POST)
+	public Integer checkUserId(String userId) {
+		System.out.println(userId);
+		return memberService.checkUserId(userId);
+	}
 	
 	
 }

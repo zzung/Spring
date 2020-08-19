@@ -19,6 +19,7 @@
 	<input type="button" value="메인으로 " onclick="location.href='../'">
 	<form action=updateDir method=post enctype="multipart/form-data"
 		class="form-horizontal" onsubmit="addId();"> <%--버튼은 onclick, 폼은 onsubmit(눌렀을때 실행되는것) --%>
+	<input type=hidden name="${_csrf.parameterName}" value="${_csrf.token}">	
 		<table border="1">
 			<tr>
 				<th>Id</th>

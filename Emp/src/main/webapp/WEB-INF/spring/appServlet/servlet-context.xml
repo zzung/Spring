@@ -40,7 +40,9 @@
 	<mvc:view-controller path="/hr/main" view-name="/hr/main" />
 	<mvc:view-controller path="/error/autherror" view-name="/error/autherror" />
 	<mvc:view-controller path="/error/runtime" view-name="/error/runtime" />
-	
+	<mvc:view-controller path="/json" view-name="/json" />
+	<mvc:view-controller path="/ajax" view-name="/ajax" />
+	<mvc:view-controller path="/mocka" view-name="/mocka" />
 	
 	<!-- controller에서 딱히 기능을 안하니까 바로 login으로 보내도록 처리 -->
 	<mvc:view-controller path="/login" view-name="login"/>

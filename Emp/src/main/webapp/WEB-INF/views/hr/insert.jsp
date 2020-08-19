@@ -14,6 +14,7 @@
 <%--수정일때 --%>
 <c:when test="${message eq update}">
 <form action="./${message}" method=post >	 <!-- ./ =>hr , ../=>home -->
+<input type=hidden name="${_csrf.parameterName}" value="${_csrf.token}">
 <table border=1>
 <tr>
 	<th>Employeee_id</th>
@@ -84,8 +85,8 @@
 	</td>
 </tr>
 <tr>
-<th colspan=2><input type=submit value="수정">
-<input type=reset value="취소"></th>
+	<th colspan=2><input type=submit value="수정">
+	<input type=reset value="취소"></th>
 </tr>
 </table>
 </form>
@@ -94,6 +95,7 @@
 <%-- 입력일때 --%>
 <c:otherwise>
 	<form:form action="./${message}" method="post" modelAttribute="emp">
+	<input type=hidden name="${_csrf.parameterName}" value="${_csrf.token}">
 		<table border=1>
 		<tr>
 			<th>Employeee_id</th>

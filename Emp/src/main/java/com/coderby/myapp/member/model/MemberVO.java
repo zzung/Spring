@@ -87,9 +87,9 @@ public class MemberVO implements UserDetails{
 		this.address = address;
 	}
 
-	public int getEnabled() {
-		return enabled;
-	}
+//	public int getEnabled() {
+//		return enabled;
+//	}
 
 	public void setEnabled(int enabled) {
 		this.enabled = enabled;

@@ -15,6 +15,7 @@
 <c:choose>
 	<c:when test="${count.empCount eq 0}">
 	<form action="./delete" method=post>
+	<input type=hidden name="${_csrf.parameterName}" value="${_csrf.token}">
 	<input type=hidden name=empId value="${emp.employeeId}">
 	<input type=submit value="삭 제">
 	<input type=reset value="취 소">
